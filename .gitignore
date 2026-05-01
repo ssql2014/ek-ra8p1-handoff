@@ -1,0 +1,8 @@
+# FSP regen experiment (large, non-functional, not load-bearing)
+failed-6.2.0-attempt/
+# Python cache
+__pycache__/
+*.pyc
+# Backup files
+*.bak
+*.bak-*
