@@ -28,7 +28,7 @@ import pylink
 
 DEVICE = "R7KA8P1KF_CPU0"
 DLL_PATH = "/Users/alex/jlink_v938a_extract/Applications/SEGGER/JLink_V938a/libjlinkarm.dylib"
-RTT_BLOCK_ADDR = 0x2200124c  # _SEGGER_RTT control-block (read from firmware.map if rebuilt)
+RTT_BLOCK_ADDR = 0x220014c8  # _SEGGER_RTT control-block (firmware built 2026-05-11)
 SPEED_KHZ = 4000
 
 QUIT_KEYS = (0x1D, 0x18)  # Ctrl-] and Ctrl-X

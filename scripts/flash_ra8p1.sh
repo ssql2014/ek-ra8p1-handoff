@@ -13,8 +13,11 @@ set -euo pipefail
 
 MICROPYTHON_ROOT="${MICROPYTHON_ROOT:-/Users/alex/micropython}"
 BIN="${MICROPYTHON_ROOT}/ports/renesas-ra/build-EK_RA8P1/firmware.bin"
-DEVICE="R7KA8P1KFLCAC"
+# CRITICAL: use the core name, NOT the package code (R7KA8P1KFLCAC causes
+# a 10+ minute hang on the OSPI flash region).
+DEVICE="R7KA8P1KF_CPU0"
 LOAD_ADDR="0x02000000"
+OSPI_SCRIPT="/Users/alex/ra-fsp-examples/example_projects/ek_ra8p1/_quickstart/quickstart_ek_ra8p1_ep/e2studio/script/RA8x1_Reset_OSPI.JLinkScript"
 
 HALT_AFTER_FLASH=0
 for arg in "$@"; do
@@ -29,8 +32,9 @@ if [[ ! -f "$BIN" ]]; then
     exit 1
 fi
 
-if ! command -v JLinkExe >/dev/null; then
-    echo "JLinkExe not found on PATH — install J-Link Software Pack" >&2
+JLINK="${JLINK:-/Users/alex/jlink_v938a_extract/Applications/SEGGER/JLink_V938a/JLinkExe}"
+if [[ ! -x "$JLINK" ]]; then
+    echo "JLinkExe not found: $JLINK — set JLINK env var or install to default path" >&2
     exit 1
 fi
 
@@ -54,5 +58,6 @@ EOF
 fi
 
 echo "==> flashing $BIN to ${DEVICE} @ ${LOAD_ADDR}"
-JLinkExe -device "${DEVICE}" -if SWD -speed 4000 -autoconnect 1 -CommanderScript "$SCRIPT"
+"$JLINK" -device "${DEVICE}" -if SWD -speed 4000 -autoconnect 1 \
+    -JLinkScriptFile "${OSPI_SCRIPT}" -CommanderScript "$SCRIPT"
 echo "==> done"
